@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<!-- Required meta tags -->
+		<!--#region Required meta tags -->
 		<meta charset="utf-8" />
 		<meta
 			name="viewport"
 			content="width=device-width, initial-scale=1, shrink-to-fit=no"
 		/>
-
-		<!-- Bootstrap CSS -->
+		<!--#endregion-->
+		<!--#region BOOTSTRAP-->
+		<!--CSS -->
 		<link
 			rel="stylesheet"
 			href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
@@ -26,6 +27,7 @@
 			integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
 			crossorigin="anonymous"
 		></script>
+		<!--#endregion-->
 		<!--
             You are creating the "shopping cart experience" for a Online Marketplace.
             You have the list of the available books from the current API:
@@ -50,6 +52,7 @@
 		<title>Strivazon</title>
 	</head>
 	<body>
+		<!--#region top interface-->
 		<div class="sticky-top">
 			<div class="d-flex flex-column flex-sm-row">
 				<a
@@ -76,6 +79,14 @@
 					id="skipped"
 					>Skipped</a
 				>
+				<a
+					href="out/index.html"
+					class="btn btn-success head-ui btn-lg"
+					tabindex="-1"
+					role="button"
+					id="skipped"
+					>my javascript documentation</a
+				>
 			</div>
 			<input
 				id="search"
@@ -84,8 +95,11 @@
 				placeholder="Search"
 			/>
 		</div>
-		<div class="container">
+		<!--#endregion-->
+		<!--#region true body of the page-->
+		<main class="container">
 			<div id="bookShelf" class="row">
+				<!--#region Book Template-->
 				<div
 					id="cardTemplate"
 					class="card col col-12 col-md-4 m-2 d-none"
@@ -104,6 +118,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</main>
+		<!--#endregion-->
 	</body>
 </html>
