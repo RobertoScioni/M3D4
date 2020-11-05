@@ -11,12 +11,18 @@ window.onload = () => {
 	})
 		.then((response) => response.json())
 		.then((body) => (reply = body))
-		.then(() => loadLibrary())
+		.then(() => loadLibrary(reply))
 }
 
-const loadLibrary = () => {
+const loadLibrary = (library) => {
 	const template = document.querySelector("#cardTemplate")
-	reply.forEach((book) => {
+	document.querySelector("#search").addEventListener("keyup", search)
+	document
+		.querySelectorAll("#bookShelf>:not(#cardTemplate)")
+		.forEach((card) => {
+			card.remove()
+		})
+	library.forEach((book) => {
 		let card = template.cloneNode(true)
 		card.id = book.asin
 		card.querySelector(".card-title").innerHTML = `<b>${book.title}</b>`
@@ -49,4 +55,22 @@ const toggleCartStatus = (event) => {
 const toggleSkip = (event) => {
 	const card = event.target.closest(".card")
 	card.remove()
+}
+
+const search = (event) => {
+	let query = document.querySelector("#search").value
+	if (query.length >= 3) {
+		loadLibrary(
+			reply.filter((book) =>
+				book.title.toLowerCase().includes(query.toLowerCase())
+			)
+		)
+	} else {
+		if (
+			document.querySelectorAll("#bookShelf>:not(#cardTemplate)").length <
+			reply.length
+		) {
+			loadLibrary(reply)
+		}
+	}
 }
