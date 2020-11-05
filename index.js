@@ -1,4 +1,5 @@
-let reply = []
+let catalog = []
+let library = []
 let cart = []
 let skipped = []
 
@@ -10,11 +11,42 @@ window.onload = () => {
 		method: "GET",
 	})
 		.then((response) => response.json())
-		.then((body) => (reply = body))
-		.then(() => loadLibrary(reply))
+		.then((body) => (catalog = body))
+		.then(() => {
+			loadLibrary(catalog)
+			library = [...catalog]
+		})
+	document.querySelector("#cart").addEventListener("click", loadCart)
+	document.querySelector("#library").addEventListener("click", reLoadLibrary)
+	document.querySelector("#skipped").addEventListener("click", loadSkipped)
 }
 
-const loadLibrary = (library) => {
+const reLoadLibrary = () => {
+	document.querySelector("#cart").removeEventListener("click", clearCart)
+	document.querySelector("#cart").addEventListener("click", loadCart)
+	document.querySelector("#cart").innerText = "Cart"
+	loadLibrary(library)
+}
+
+const clearCart = (event) => {
+	cart = []
+	loadCart(event)
+}
+
+const loadCart = (event) => {
+	event.target.innerText = "Clear Cart"
+	event.target.removeEventListener("click", loadCart)
+	event.target.addEventListener("click", clearCart)
+	loadLibrary(cart)
+}
+const loadSkipped = () => {
+	document.querySelector("#cart").removeEventListener("click", clearCart)
+	document.querySelector("#cart").addEventListener("click", loadCart)
+	document.querySelector("#cart").innerText = "Cart"
+	loadLibrary(skipped)
+}
+
+const loadLibrary = (shelf) => {
 	const template = document.querySelector("#cardTemplate")
 	document.querySelector("#search").addEventListener("keyup", search)
 	document
@@ -22,7 +54,8 @@ const loadLibrary = (library) => {
 		.forEach((card) => {
 			card.remove()
 		})
-	library.forEach((book) => {
+	console.log(shelf)
+	shelf.forEach((book) => {
 		let card = template.cloneNode(true)
 		card.id = book.asin
 		card.querySelector(".card-title").innerHTML = `<b>${book.title}</b>`
@@ -41,7 +74,7 @@ const toggleCartStatus = (event) => {
 	const card = event.target.closest(".card")
 	card.classList.toggle("in-cart")
 	if (card.matches(".in-cart")) {
-		cart.push(reply.filter((book) => book.asin === card.id))
+		cart.push(catalog.find((book) => book.asin === card.id))
 		card.querySelector(".btn-cart").innerText = "remove from cart"
 	} else {
 		cart.splice(
@@ -55,22 +88,28 @@ const toggleCartStatus = (event) => {
 const toggleSkip = (event) => {
 	const card = event.target.closest(".card")
 	card.remove()
+	skipped.push(catalog.filter((book) => book.asin === card.id))
+	library.splice(
+		library.findIndex((book) => book.asin === card.id),
+		1
+	)
+	loadLibrary(library)
 }
 
 const search = (event) => {
 	let query = document.querySelector("#search").value
 	if (query.length >= 3) {
 		loadLibrary(
-			reply.filter((book) =>
+			library.filter((book) =>
 				book.title.toLowerCase().includes(query.toLowerCase())
 			)
 		)
 	} else {
 		if (
 			document.querySelectorAll("#bookShelf>:not(#cardTemplate)").length <
-			reply.length
+			library.length
 		) {
-			loadLibrary(reply)
+			loadLibrary(library)
 		}
 	}
 }
