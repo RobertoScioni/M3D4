@@ -1,17 +1,20 @@
+/**
+ *
+ */
 let catalog = []
 let library = []
 let cart = []
 let skipped = []
 
 /**
- * initialize the page
+ * @event initialize the page
  */
 window.onload = () => {
 	fetch("https://striveschool-api.herokuapp.com/books", {
 		method: "GET",
 	})
-		.then((response) => response.json()) //get the data in json format
-		.then((body) => (catalog = body)) //copy the body in the catalog
+		.then((response) => response.json()) ///get the data in json format
+		.then((body) => (catalog = body)) ///copy the body in the catalog
 		.then(() => {
 			loadLibrary(catalog) //print the whole catalog
 			if (window.location.search !== "") {
@@ -25,7 +28,7 @@ window.onload = () => {
 	document.querySelector("#skipped").addEventListener("click", loadSkipped)
 }
 /**
- * fetches additional data from googleapis
+ * @description fetches additional data from googleapis
  * @param {*} asin the asin to search for, since amazon started as a bookstore asin was developped to be totally compatible with ISBN
  * @returns it returns a promise of the volume info from googlebooks
  */
@@ -47,7 +50,7 @@ const reLoadLibrary = () => {
 }
 
 /**
- * clears all elements from the cart array
+ * @description clears all elements from the cart array
  * @param {*} event the function caller
  */
 
@@ -57,7 +60,7 @@ const clearCart = (event) => {
 }
 
 /**
- * shows the contents of the cart and toggles the function of it's caller to make it trigger the cart clearing
+ * @description shows the contents of the cart and toggles the function of it's caller to make it trigger the cart clearing
  * @param {*} event
  */
 const loadCart = (event) => {
@@ -78,12 +81,12 @@ const loadSkipped = () => {
 }
 
 /**
- * shows the contents of a catalog of books in a grid of cards
+ * @description shows the contents of a catalog of books in a grid of cards
  * @param {*} shelf an array of books
  */
 
 const loadLibrary = (shelf) => {
-	const template = document.querySelector("#cardTemplate") //get the template
+	const template = document.querySelector("#cardTemplate") ///get the template
 	//#region remove any card except the template
 	document
 		.querySelectorAll("#bookShelf>:not(#cardTemplate)")
@@ -110,11 +113,11 @@ const loadLibrary = (shelf) => {
 }
 
 /**
- * adds or removes a book from the cart
+ * @description adds or removes a book from the cart
  * @param {*} event a listener inside a card
  */
 const toggleCartStatus = (event) => {
-	const card = event.target.closest(".card") //get the closest ancestof with a class of card
+	const card = event.target.closest(".card") //...get the closest ancestof with a class of card
 	card.classList.toggle("in-cart") //toggles the in-cart class that manages the stile of the elements that are in the cart
 	if (card.matches(".in-cart")) {
 		cart.push(catalog.find((book) => book.asin === card.id.substring(4))) //1)scans the catalog to FIND an book whose ASIN equals the ID of the card minus the isbn prefix and then PUSHES it in CART
@@ -134,7 +137,7 @@ const toggleCartStatus = (event) => {
  */
 
 const toggleSkip = (event) => {
-	const card = event.target.closest(".card") //get the closest ancestof with a class of card
+	const card = event.target.closest(".card") ///@description get the closest ancestor of event.target with a class of card
 	card.remove() //remove the whole calling card from the DOM lmao obsolet, youll'see soon why
 	skipped.push(catalog.find((book) => book.asin === card.id.substring(4))) //1)scans the catalog to FIND an book whose ASIN equals the ID of the card minus the isbn prefix and then PUSHES it in SKIPPED
 	library.splice(
